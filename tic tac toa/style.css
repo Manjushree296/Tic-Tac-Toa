@@ -1,0 +1,88 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 2px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    cursor: pointer;
+}
+
+.message {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+<script>
+        const board = document.getElementById('board');
+const message = document.getElementById('message');
+let currentPlayer = 'X';
+let gameStatus = ['', '', '', '', '', '', '', '', ''];
+let movesLeft = 9;
+
+function makeMove(index) {
+    if (!gameStatus[index]) {
+        gameStatus[index] = currentPlayer;
+        board.children[index].innerText = currentPlayer;
+        movesLeft--;
+        if (checkWin()) {
+            message.innerText = `${currentPlayer} wins!`;
+            disableBoard();
+        } else if (movesLeft === 0) {
+            message.innerText = "It's a draw!";
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            message.innerText = `Player ${currentPlayer}'s turn`;
+        }
+    }
+}
+
+function checkWin() {
+    const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    for (let condition of winConditions) {
+        const [a, b, c] = condition;
+        if (gameStatus[a] && gameStatus[a] === gameStatus[b] && gameStatus[a] === gameStatus[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function disableBoard() {
+    for (let cell of board.children) {
+        cell.onclick = null;
+    }
+}
+
+function resetGame() {
+    currentPlayer = 'X';
+    gameStatus = ['', '', '', '', '', '', '', '', ''];
+    movesLeft = 9;
+    message.innerText = `Player ${currentPlayer}'s turn`;
+    for (let cell of board.children) {
+        cell.innerText = '';
+        cell.onclick = function () {
+            makeMove(Array.from(board.children).indexOf(cell));
+        };
+    }
+}
+
+    </script>

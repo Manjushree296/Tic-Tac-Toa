@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOX&#x1F54A</title>
+    <link rel="icon" type="x-icon" href="tic.jpeg">
+</head>
+<style>
+    body{
+        padding: 0px;
+        margin: 0px;
+        align-items: center;
+    }
+    .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 2px;
+    margin-left: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    cursor: pointer;
+    background-color: bisque;
+    color: brown;
+    transition: 2s;
+    border-radius: 10px;
+    border: 2px brown solid;
+}
+.cell:hover{
+    color: rgba(156, 29, 29, 0.6);
+    background-color:rgb(224, 190, 140)
+}
+.message {
+    font-size: 24px;
+    font-family: cursive;
+    margin-top: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: brown;
+    text-transform: capitalize;
+}
+.but{
+    color: rgb(114, 74, 21);
+    background-color: bisque;
+    margin-left: 113px;
+    padding: 4px;
+    transition: 4s;
+    border-radius: 10px;
+    border-color: brown;
+    margin-top: 20px;
+}
+.but:active{
+    background-color: brown;
+}
+h1{
+    color:hsl(0, 100%, 30%);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-decoration-line: underline;
+    margin-left: 70px;
+}
+</style>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div id="board" class="board">
+        <div class="cell" onclick="Move(0)"></div>
+        <div class="cell" onclick="Move(1)"></div>
+        <div class="cell" onclick="Move(2)"></div>
+        <div class="cell" onclick="Move(3)"></div>
+        <div class="cell" onclick="Move(4)"></div>
+        <div class="cell" onclick="Move(5)"></div>
+        <div class="cell" onclick="Move(6)"></div>
+        <div class="cell" onclick="Move(7)"></div>
+        <div class="cell" onclick="Move(8)"></div>
+    </div>
+    <div id="message" class="message"></div>
+    <button class="but" onclick="resetGame()">Reset Game</button>
+    <script>
+        const board = document.getElementById('board');
+const message = document.getElementById('message');
+let currentPlayer = 'X';
+let gameStatus = ['', '', '', '', '', '', '', '', ''];
+let movesLeft = 9;
+
+function makeMove(index) {
+    if (!gameStatus[index]) {
+        gameStatus[index] = currentPlayer;
+        board.children[index].innerText = currentPlayer;
+        movesLeft--;
+        if (checkWin()) {
+            message.innerText = `${currentPlayer} wins!`;
+            disableBoard();
+        } else if (movesLeft === 0) {
+            message.innerText = "It's a draw!";
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            message.innerText = `Player ${currentPlayer}'s turn`;
+        }
+    }
+}
+
+function checkWin() {
+    const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    for (let condition of winConditions) {
+        const [a, b, c] = condition;
+        if (gameStatus[a] && gameStatus[a] === gameStatus[b] && gameStatus[a] === gameStatus[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function disableBoard() {
+    for (let cell of board.children) {
+        cell.onclick = null;
+    }
+}
+
+function resetGame() {
+    currentPlayer = 'X';
+    gameStatus = ['', '', '', '', '', '', '', '', ''];
+    movesLeft = 9;
+    message.innerText = `Player ${currentPlayer}'s turn`;
+    for (let cell of board.children) {
+        cell.innerText = '';
+        cell.onclick = function () {
+            makeMove(Array.from(board.children).indexOf(cell));
+        };
+    }
+}
+
+    </script>
+
+   
+</body>
+</html>
